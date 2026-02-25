@@ -1,0 +1,146 @@
+CXX := g++
+CXXSTD := -std=c++14
+USE_OPENMP ?= 1
+CPU_OMP_LAUNCH_DEFAULT ?= 0
+CPU_OPT_FLAGS ?= -O3
+CPU_ARCH_FLAGS ?=
+
+CPPFLAGS := -DSPONGE_CPU_PHASE1=1 -DCPU_CUDA_COMPAT_ABORT_ON_STUB_USE=0 -DCUDA_ARCH_BIN=52 -DCPU_CUDA_COMPAT_OMP_LAUNCH_DEFAULT=$(CPU_OMP_LAUNCH_DEFAULT)
+CXXFLAGS := $(CPU_OPT_FLAGS) $(CPU_ARCH_FLAGS) -g -Wall -Wextra -fno-strict-aliasing -I. -Istubs
+LDFLAGS := -ldl -lfftw3f
+
+ifeq ($(USE_OPENMP),1)
+CPPFLAGS += -DCPU_CUDA_COMPAT_USE_OPENMP=1
+CXXFLAGS += -fopenmp
+LDFLAGS += -fopenmp
+else
+CPPFLAGS += -DCPU_CUDA_COMPAT_USE_OPENMP=0
+endif
+
+CPU_GATECHECK_OBJECTS := \
+	control.cpu.o \
+	cpu_phase1_gates.o \
+	cpu_phase1_main.o
+
+CPU_PHASE2_GATECHECK_OBJECTS := \
+	control.cpu.o \
+	cpu_phase2_gates.o \
+	cpu_phase2_main.o
+
+CPU_PHASE2_MAINPATH_RUNTIME_OBJECTS := \
+	control.cpu.o \
+	collective_variable/collective_variable.cpu.o \
+	collective_variable/combine.cpu.o \
+	plugin/plugin.cpu.o \
+	cpu_phase2_mainpath_runtime.o
+
+CPU_MAINPATH_SOURCES := \
+	main.cpp \
+	common.cpp \
+	control.cpp \
+	MD_core/MD_core.cpp \
+	bond/bond.cpp \
+	bond/bond_soft.cpp \
+	bond/listed_forces.cpp \
+	angle/angle.cpp \
+	angle/Urey_Bradley_force.cpp \
+	dihedral/dihedral.cpp \
+	dihedral/improper_dihedral.cpp \
+	cmap/cmap.cpp \
+	nb14/nb14.cpp \
+	neighbor_list/neighbor_list.cpp \
+	No_PBC/Coulomb_Force_No_PBC.cpp \
+	No_PBC/generalized_Born.cpp \
+	No_PBC/Lennard_Jones_force_No_PBC.cpp \
+	Lennard_Jones_force/Lennard_Jones_force.cpp \
+	Lennard_Jones_force/solvent_LJ.cpp \
+	Lennard_Jones_force/LJ_soft_core.cpp \
+	Lennard_Jones_force/pairwise_force.cpp \
+	PME_force/PME_force.cpp \
+	thermostats/Langevin_MD.cpp \
+	thermostats/Middle_Langevin_MD.cpp \
+	thermostats/Andersen_thermostat.cpp \
+	thermostats/Berendsen_thermostat.cpp \
+	thermostats/nose_hoover_chain.cpp \
+	barostats/MC_barostat.cpp \
+	barostats/Berendsen_barostat.cpp \
+	barostats/andersen_barostat.cpp \
+	restrain/restrain.cpp \
+	constrain/constrain.cpp \
+	constrain/simple_constrain.cpp \
+	constrain/SETTLE.cpp \
+	constrain/SHAKE.cpp \
+	virtual_atoms/virtual_atoms.cpp \
+	SITS/SITS.cpp \
+	collective_variable/collective_variable.cpp \
+	collective_variable/simple_cv.cpp \
+	collective_variable/RMSD.cpp \
+	collective_variable/tabulated.cpp \
+	collective_variable/combine.cpp \
+	bias/restrain_cv.cpp \
+	bias/steer.cpp \
+	bias/Meta1D.cpp \
+	wall/hard_wall.cpp \
+	wall/soft_wall.cpp \
+	plugin/plugin.cpp
+
+CPU_MAINPATH_OBJECTS := $(CPU_MAINPATH_SOURCES:.cpp=.cpu.o)
+
+all: sponge_cpu_phase1_gatecheck sponge_cpu_phase2_gatecheck sponge_cpu_phase1_replay sponge_cpu_phase1_minidyn sponge_cpu_phase2_mainpath_runtime
+
+sponge_cpu_phase1_gatecheck: $(CPU_GATECHECK_OBJECTS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+sponge_cpu_phase2_gatecheck: $(CPU_PHASE2_GATECHECK_OBJECTS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+sponge_cpu_phase1_replay: cpu_phase1_replay_main.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+sponge_cpu_phase1_minidyn: cpu_phase1_minidyn_main.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+sponge_cpu_phase2_mainpath_runtime: $(CPU_PHASE2_MAINPATH_RUNTIME_OBJECTS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+sponge_cpu_mainpath: $(CPU_MAINPATH_OBJECTS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+control.cpu.o: control.cpp
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c $< -o $@
+
+cpu_phase1_gates.o: cpu_phase1_gates.cpp cpu_phase1_gates.h control.h
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+cpu_phase1_main.o: cpu_phase1_main.cpp cpu_phase1_gates.h control.h
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+cpu_phase2_gates.o: cpu_phase2_gates.cpp cpu_phase2_gates.h control.h
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+cpu_phase2_main.o: cpu_phase2_main.cpp cpu_phase2_gates.h control.h
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+cpu_phase1_replay_main.o: cpu_phase1_replay_main.cpp
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+cpu_phase1_minidyn_main.o: cpu_phase1_minidyn_main.cpp
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+collective_variable/collective_variable.cpu.o: collective_variable/collective_variable.cpp
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c $< -o $@
+
+collective_variable/combine.cpu.o: collective_variable/combine.cpp collective_variable/combine.h collective_variable/collective_variable.h control.h
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c $< -o $@
+
+plugin/plugin.cpu.o: plugin/plugin.cpp plugin/plugin.h control.h
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c $< -o $@
+
+%.cpu.o: %.cpp
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c $< -o $@
+
+cpu_phase2_mainpath_runtime.o: cpu_phase2_mainpath_runtime.cpp control.h collective_variable/collective_variable.h plugin/plugin.h
+	$(CXX) $(CXXSTD) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(CPU_GATECHECK_OBJECTS) $(CPU_PHASE2_GATECHECK_OBJECTS) $(CPU_PHASE2_MAINPATH_RUNTIME_OBJECTS) $(CPU_MAINPATH_OBJECTS) cpu_phase1_replay_main.o cpu_phase1_minidyn_main.o sponge_cpu_phase1_gatecheck sponge_cpu_phase2_gatecheck sponge_cpu_phase1_replay sponge_cpu_phase1_minidyn sponge_cpu_phase2_mainpath_runtime sponge_cpu_mainpath
