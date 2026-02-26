@@ -1,0 +1,256 @@
+SPONGE Version:
+    v1.4 2024-01-01
+
+Sub-package:
+    SPONGE, for normal molecular dynamics simulations
+
+Citation:
+    Huang, Y. - P., Xia, Y., Yang, L., Wei, J., Yang, Y.I.and Gao, Y.Q. (2022), SPONGE: A GPU - Accelerated Molecular Dynamics Package with Enhanced Sampling and AI - Driven Algorithms.Chin.J.Chem., 40 : 160 - 168. https ://doi.org/10.1002/cjoc.202100456
+
+
+MD TASK NAME:
+    example MD simulation
+
+START INITIALIZING CONTROLLER
+    Start initializing CUDA
+        Compiled by CUDA 12.0
+        1 device found:
+            Device 0:
+                Name: NVIDIA GeForce RTX 4090
+                Memory: 47.4 GB
+                Compute Capability: 89
+        Set Device 0
+    End initializing CUDA
+    structure last modify date is 20231219
+END INITIALIZING CONTROLLER
+
+START INITIALIZING CV CONTROLLER:
+CV CONTROLLER IS NOT INITIALIZING
+
+START INITIALIZING MD CORE:
+    Mode set to NPT
+    dt set to 0.004000 ps
+    Start reading mass:
+    End reading mass
+
+    Start reading charge:
+    End reading charge
+
+    Start reading coordinate_in_file:
+        atom_numbers is 98282
+        system start_time is 25.505000
+        box_length is
+            x: 208.428757
+            y: 91.246689
+            z: 84.406631
+    End reading coordinate_in_file
+
+    Start reading velocity_in_file:
+    End reading velocity_in_file
+
+    skin set to 2.00 Angstrom
+    cutoff set to 8.00 Angstrom
+    Start reading excluded list:
+        excluded list total length is 196818
+    End reading excluded list
+
+    Start reading residue list:
+        residue_numbers is 22394
+    End reading residue list
+
+    structure last modify date is 20211105
+END INITIALIZING MD CORE
+
+START INITIALIZING MIDDLE LANGEVIN DYNAMICS:
+    atom_numbers is 98282
+    target temperature is 300.00 K
+    friction coefficient is 10.00 ps^-1
+    random seed is 629575640
+    structure last modify date is 20210826
+END INITIALIZING MIDDLE LANGEVIN DYNAMICS
+
+START INITIALIZING LENNADR JONES INFORMATION:
+    atom_numbers is 98282
+    atom_LJ_type_number is 19
+    Start initializing long range LJ correction
+        long range correction factor is: -2.230768e+09
+    End initializing long range LJ correction
+    structure last modify date is 20210830
+END INITIALIZING LENNADR JONES INFORMATION
+
+START INITIALIZING FEP SOFT CORE FOR LJ AND COULOMB:
+END INITIALIZING LENNADR JONES SOFT CORE INFORMATION
+
+PAIRWISE FORCE IS NOT INITIALIZED
+
+START INITIALIZING SOLVENT LJ:
+    the number of solvent atoms is 85556 (started from Residue #1005)
+    structure last modify date is 20230516
+END INITIALIZING SOLVENT LJ
+
+START INITIALIZING PME:
+    fftx: 216
+    ffty: 96
+    fftz: 96
+    beta: 0.348639
+    structure last modify date is 20210831
+END INITIALIZING PME
+
+START INITIALIZING NB14 (nb14_in_file):
+    non-bond 14 numbers is 32942
+    structure last modify date is 20211222
+END INITIALIZING NB14
+
+LISTED FORCES IS NOT INITIALIZED
+
+START INITIALIZING BOND (bond_in_file):
+    bond_numbers is 76865
+    structure last modify date is 20210830
+END INITIALIZING BOND
+
+START INITIALIZING BOND SOFT:
+END INITIALIZING SOFT BOND
+
+START INITIALIZING ANGLE (angle_in_file):
+    angle_numbers is 22844
+    structure last modify date is 20210830
+END INITIALIZING ANGLE
+
+UREY BRADLEY IS NOT INITIALIZED
+
+START INITIALIZING DIHEDRAL (dihedral_in_file):
+    dihedral_numbers is 43392
+    structure last modify date is 20210830
+END INITIALIZING DIHEDRAL
+
+IMPROPER DIHEDRAL IS NOT INITIALIZED
+
+START INITIALIZING CMAP:
+CMAP IS NOT INITIALIZED
+
+START INITIALIZING HARD WALL:
+END INITIALIZING HARD WALL
+
+SOFT WALLS ARE NOT INITIALIZED
+
+RESTRAIN IS NOT INITIALIZED
+
+START INITIALIZING RESTRAIN CV:
+    0 CV(s) found for restrain
+RESTRAIN CV IS NOT INITIALIZED
+
+START INITIALIZING STEER CV:
+    0 CV(s) found for steer
+STEER CV IS NOT INITIALIZED
+
+META1D IS NOT INITIALIZED
+
+START INITIALIZING CONSTRAIN:
+    constrain pair number is 70273
+END INITIALIZING CONSTRAIN
+
+START INITIALIZING SETTLE:
+    rigid triangle numbers is 21389
+    rigid pair numbers is 2408
+    remaining simple constrain pair numbers is 3698
+END INITIALIZING SETTLE
+
+START INITIALIZING SHAKE:
+    constrain iteration step is 25
+    constrain step length is 1.00
+END INITIALIZING SHAKE
+
+START INITIALIZING ANDERSEN BAROSTAT:
+    The target pressure is 1.00 bar
+    The time constant tau is 1.000000 ps
+    The compressibility constant is 0.000045 bar^-1
+    The update interval is 10
+    The piston mass is 0.013843 bar ps^2/A^3
+    The initial dV_dt is 0.000000 A^3/(1/20.455 fs)
+    structure last modify date is 20211029
+END INITIALIZING ANDERSEN BAROSTAT
+
+START INITIALIZING VIRTUAL ATOM
+    Start reading virtual levels
+        Virtual Atoms Max Level is 1
+        Virtual Atoms Number is 21389
+            FF Virtual Atoms Number is 21389
+            CV Virtual Atoms Number is 0
+    End reading virtual levels
+    Start reading virtual type numbers in different levels
+        Virutual level 0:
+            Virtual type 2 atom numbers is 21389
+    End reading virtual type numbers in different levels
+    Start reading information for every virtual atom
+    End reading information for every virtual atom
+    structure last modify date is 20210830
+END INITIALIZING VIRTUAL ATOM
+
+START INITIALIZING NEIGHBOR LIST:
+    grid dimension is 41 18 16
+    structure last modify date is 20210826
+END INITIALIZING NEIGHBOR LIST
+
+------------------------------------------------------------------------------------------------------------
+           step =             100,            time =          25.905,     temperature =          301.20, 
+      potential =      -266927.03,              LJ =        36858.51,             PME =      -359860.25, 
+        nb14_LJ =         2942.04,         nb14_EE =        34006.82,            bond =         2383.65, 
+          angle =         6197.05,        dihedral =        10545.15,         density =          0.5007, 
+       pressure =         -168.74,           dV_dt =          -57.94, 
+------------------------------------------------------------------------------------------------------------
+           step =             200,            time =          26.305,     temperature =          297.98, 
+      potential =      -267275.19,              LJ =        36900.93,             PME =      -360077.00, 
+        nb14_LJ =         2959.33,         nb14_EE =        33885.20,            bond =         2348.29, 
+          angle =         6241.58,        dihedral =        10466.47,         density =          0.5010, 
+       pressure =         -164.41,           dV_dt =         -220.33, 
+------------------------------------------------------------------------------------------------------------
+           step =             300,            time =          26.705,     temperature =          299.14, 
+      potential =      -267486.78,              LJ =        36486.32,             PME =      -359789.75, 
+        nb14_LJ =         2980.53,         nb14_EE =        33908.00,            bond =         2328.32, 
+          angle =         6073.98,        dihedral =        10525.84,         density =          0.5018, 
+       pressure =         -252.64,           dV_dt =         -392.91, 
+------------------------------------------------------------------------------------------------------------
+           step =             400,            time =          27.105,     temperature =          297.77, 
+      potential =      -267917.06,              LJ =        36957.94,             PME =      -360783.00, 
+        nb14_LJ =         3002.81,         nb14_EE =        33890.56,            bond =         2300.52, 
+          angle =         6172.05,        dihedral =        10542.05,         density =          0.5029, 
+       pressure =         -145.79,           dV_dt =         -403.63, 
+------------------------------------------------------------------------------------------------------------
+           step =             500,            time =          27.505,     temperature =          297.82, 
+      potential =      -268150.22,              LJ =        37881.64,             PME =      -361843.50, 
+        nb14_LJ =         2962.91,         nb14_EE =        33877.68,            bond =         2346.16, 
+          angle =         6179.55,        dihedral =        10445.30,         density =          0.5040, 
+       pressure =         -160.75,           dV_dt =         -520.38, 
+------------------------------------------------------------------------------------------------------------
+           step =             600,            time =          27.905,     temperature =          299.12, 
+      potential =      -268165.75,              LJ =        37281.28,             PME =      -361356.75, 
+        nb14_LJ =         3002.32,         nb14_EE =        33892.53,            bond =         2335.84, 
+          angle =         6182.97,        dihedral =        10496.05,         density =          0.5054, 
+       pressure =         -110.80,           dV_dt =         -565.10, 
+------------------------------------------------------------------------------------------------------------
+           step =             700,            time =          28.305,     temperature =          300.78, 
+      potential =      -267841.03,              LJ =        37175.42,             PME =      -361017.25, 
+        nb14_LJ =         2996.13,         nb14_EE =        33891.39,            bond =         2381.46, 
+          angle =         6187.07,        dihedral =        10544.74,         density =          0.5069, 
+       pressure =         -170.39,           dV_dt =         -574.90, 
+------------------------------------------------------------------------------------------------------------
+           step =             800,            time =          28.705,     temperature =          297.09, 
+      potential =      -268498.69,              LJ =        37450.67,             PME =      -361892.75, 
+        nb14_LJ =         2943.00,         nb14_EE =        34055.46,            bond =         2377.41, 
+          angle =         6075.78,        dihedral =        10491.72,         density =          0.5084, 
+       pressure =         -138.99,           dV_dt =         -557.33, 
+------------------------------------------------------------------------------------------------------------
+           step =             900,            time =          29.105,     temperature =          299.21, 
+      potential =      -268653.12,              LJ =        37377.80,             PME =      -361961.50, 
+        nb14_LJ =         2988.81,         nb14_EE =        34032.30,            bond =         2289.77, 
+          angle =         6123.92,        dihedral =        10495.71,         density =          0.5100, 
+       pressure =         -122.79,           dV_dt =         -524.57, 
+------------------------------------------------------------------------------------------------------------
+           step =            1000,            time =          29.505,     temperature =          301.69, 
+      potential =      -269074.66,              LJ =        37623.65,             PME =      -362571.75, 
+        nb14_LJ =         2958.74,         nb14_EE =        34057.78,            bond =         2318.83, 
+          angle =         6097.49,        dihedral =        10440.58,         density =          0.5113, 
+       pressure =         -119.91,           dV_dt =         -546.03, 
+------------------------------------------------------------------------------------------------------------
+Core Run Wall Time: 1.410799 seconds
+Core Run Speed: 245.212524 ns/day
