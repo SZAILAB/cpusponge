@@ -84,12 +84,14 @@ PARALLEL_BACKENDS=2 \
 ./tools/run_step1000_matrix.sh
 ```
 
-说明：`step=5000` 的流程和脚本已就绪，可直接运行；当前仓库内已固化的是 `step=1000` 基线结果（见下文）。
+说明：`step=5000` 的流程和脚本已就绪，可直接运行；当前仓库内已固化 `step=1000` 与 `step=5000` 两套基线结果（见下文）。
 
 ### 3) 汇总评分
 
 ```bash
 OUT_DIR=reports/step1000 ./tools/summarize_step_errors.sh
+# 或
+OUT_DIR=reports/step5000 ./tools/summarize_step_errors.sh
 ```
 
 ### 4) 误差图
@@ -143,11 +145,60 @@ python3 ./tools/plot_step_relerr.py \
 
 ![step1000 andersenbaro metrics](docs/figures/step1000_andersenbaro_metrics.png)
 
+![step1000 andersenbaro heatmap](docs/figures/step1000_andersenbaro_heatmap_local_cpu.png)
+
 如需重新生成这些图：
 
 ```bash
 python3 ./tools/plot_step1000_baseline.py
 ```
+
+若要按同一脚本生成 step5000 对应图：
+
+```bash
+python3 ./tools/plot_step1000_baseline.py \
+  --baseline-dir /home/wuping/cpusponge/reports/step5000_baseline \
+  --fig-dir /home/wuping/cpusponge/docs/figures \
+  --step-tag step5000 \
+  --focus-case mdin_npt_andersenbaro
+```
+
+## 已完成基线结果（step=5000）
+
+比较指标列：
+`Step,Time,Temperature,Potential,LJ,PME,Nb14_LJ,Nb14_EE,Bond,Angle,Dihedral`
+
+汇总结果（local_cpu 相对 GPU）：
+
+1. 7/7 case 跑通，无 non-finite。
+2. 平均相对误差：`0.420779%`
+3. 最大相对误差：`6.862877%`
+4. 平均单 case 耗时：`3732.43s`（约 `62.2` 分钟）
+
+按 case 的误差（`mean_rel_err_pct / max_rel_err_pct`）：
+
+1. `mdin_npt_andersenbaro`: `0.292444 / 3.067759`
+2. `mdin_npt_berendsen`: `0.567299 / 5.848963`
+3. `mdin_npt_mcbaro`: `0.326313 / 3.088861`
+4. `mdin_nve_shake`: `0.561873 / 5.538732`
+5. `mdin_nvt_andersen`: `0.376884 / 3.896135`
+6. `mdin_nvt_langevin`: `0.273847 / 2.549646`
+7. `mdin_nvt_nhc_simple`: `0.546796 / 6.862877`
+
+step5000 基线原始数据位于仓库内：
+
+1. `reports/step5000_baseline/local_cpu_overview.csv`
+2. `reports/step5000_baseline/local_cpu_relerr_summary.csv`
+
+step5000 示例图（local_cpu vs GPU）：
+
+![step5000 case summary](docs/figures/step5000_case_summary.png)
+
+![step5000 case mean lines](docs/figures/step5000_case_mean_lines.png)
+
+![step5000 andersenbaro metrics](docs/figures/step5000_andersenbaro_metrics.png)
+
+![step5000 andersenbaro heatmap](docs/figures/step5000_andersenbaro_heatmap_local_cpu.png)
 
 ## 附录风格压力轨迹采集与出图
 
@@ -174,6 +225,44 @@ python3 ./tools/plot_appendix_pressure.py \
 
 1. `reports/step5000_appendix/pressure/*.csv`
 2. `reports/step5000_appendix/figures/*.png`
+
+已完成附录采样结果（`mdin_npt_andersenbaro`, `1000` 步, `10 GPU + 1 CPU`）：
+
+1. GPU 10 次 pressure 均值的均值：`-155.4256`
+2. CPU 参考 run 的 pressure 均值：`-165.0190`
+3. CPU 相对 GPU 均值差值：`-9.5934`
+
+附录统计数据：
+`reports/step1000_appendix/pressure/pressure_summary_stats.csv`
+
+附录图：
+
+![step1000 pressure gpu repeats](docs/figures/step1000_pressure_gpu_repeats.png)
+
+![step1000 pressure gpu gray vs cpu](docs/figures/step1000_pressure_gpu_gray_vs_cpu.png)
+
+![step1000 pressure cpu ma10](docs/figures/step1000_pressure_cpu_ma10.png)
+
+![step1000 pressure overlay](docs/figures/step1000_pressure_overlay_gpu10_cpu1.png)
+
+已完成附录采样结果（`mdin_npt_andersenbaro`, `5000` 步, `10 GPU + 1 CPU`）：
+
+1. GPU 10 次 pressure 均值的均值：`-100.4906`
+2. CPU 参考 run 的 pressure 均值：`-94.3628`
+3. CPU 相对 GPU 均值差值：`+6.1278`
+
+附录统计数据：
+`reports/step5000_appendix/pressure/pressure_summary_stats.csv`
+
+附录图：
+
+![step5000 pressure gpu repeats](docs/figures/step5000_pressure_gpu_repeats.png)
+
+![step5000 pressure gpu gray vs cpu](docs/figures/step5000_pressure_gpu_gray_vs_cpu.png)
+
+![step5000 pressure cpu ma10](docs/figures/step5000_pressure_cpu_ma10.png)
+
+![step5000 pressure overlay](docs/figures/step5000_pressure_overlay_gpu10_cpu1.png)
 
 ## 备注
 
