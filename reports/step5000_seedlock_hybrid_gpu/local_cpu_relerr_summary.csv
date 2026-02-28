@@ -1,0 +1,8 @@
+backend,case,mean_rel_err_pct,max_rel_err_pct
+local_cpu,mdin_npt_andersenbaro,0.295817,2.799325
+local_cpu,mdin_npt_berendsen,0.532669,7.109131
+local_cpu,mdin_npt_mcbaro,0.293063,2.441305
+local_cpu,mdin_nve_shake,0.562301,4.918853
+local_cpu,mdin_nvt_andersen,0.394903,2.883012
+local_cpu,mdin_nvt_langevin,0.287550,2.174993
+local_cpu,mdin_nvt_nhc_simple,0.551348,6.652882

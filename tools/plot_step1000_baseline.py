@@ -122,7 +122,7 @@ def plot_case_heatmap(relerr_csv: Path, out_png: Path, step_tag: str, focus_case
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--baseline-dir", default="/home/wuping/cpusponge/reports/step1000_baseline")
+    parser.add_argument("--baseline-dir", default="/home/wuping/cpusponge/reports/step1000_seedlock_hybrid_gpu")
     parser.add_argument("--fig-dir", default="/home/wuping/cpusponge/docs/figures")
     parser.add_argument("--step-tag", default="step1000")
     parser.add_argument("--focus-case", default="mdin_npt_andersenbaro")

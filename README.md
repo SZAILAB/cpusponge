@@ -67,6 +67,8 @@ WRITE_INFORMATION_INTERVAL=100 \
 ERR_STEP_START=100 \
 ERR_STEP_INTERVAL=100 \
 ERR_STEP_END=1000 \
+LOCK_SEED_MODE=1 \
+FIXED_SEED=12345 \
 PARALLEL_BACKENDS=2 \
 ./tools/run_step1000_matrix.sh
 ```
@@ -80,11 +82,13 @@ WRITE_INFORMATION_INTERVAL=100 \
 ERR_STEP_START=100 \
 ERR_STEP_INTERVAL=100 \
 ERR_STEP_END=5000 \
+LOCK_SEED_MODE=1 \
+FIXED_SEED=12345 \
 PARALLEL_BACKENDS=2 \
 ./tools/run_step1000_matrix.sh
 ```
 
-说明：`step=5000` 的流程和脚本已就绪，可直接运行；当前仓库内已固化 `step=1000` 与 `step=5000` 两套基线结果（见下文）。
+说明：`step=5000` 的流程和脚本已就绪，可直接运行；当前仓库内已固化 `step=1000` 与 `step=5000` 两套固定 seed 基线结果（`seed=12345`，见下文）。
 
 ### 3) 汇总评分
 
@@ -113,29 +117,33 @@ python3 ./tools/plot_step_relerr.py \
 6. `mdin_nvt_langevin`
 7. `mdin_nvt_nhc_simple`
 
-## 已完成基线结果（step=1000）
+## 已完成基线结果（step=1000, 固定 seed）
 
 比较指标列：
 `Step,Time,Temperature,Potential,LJ,PME,Nb14_LJ,Nb14_EE,Bond,Angle,Dihedral`
 
+固定 seed：`12345`
+
 汇总结果（local_cpu 相对 GPU）：
 
 1. 7/7 case 跑通，无 non-finite。
-2. 平均相对误差：`0.277071%`
-3. 最大相对误差：`3.000605%`
+2. 平均相对误差：`0.291969%`
+3. 最大相对误差：`5.499557%`
+4. 平均单 case 耗时：`660.86s`（约 `11.0` 分钟）
 
 按 case 的误差（`mean_rel_err_pct / max_rel_err_pct`）：
 
-1. `mdin_npt_andersenbaro`: `0.169735 / 1.257991`
-2. `mdin_npt_berendsen`: `0.348508 / 2.449253`
-3. `mdin_npt_mcbaro`: `0.141537 / 1.416090`
-4. `mdin_nve_shake`: `0.415059 / 3.000605`
-5. `mdin_nvt_andersen`: `0.276093 / 1.400187`
-6. `mdin_nvt_langevin`: `0.184596 / 1.874703`
-7. `mdin_nvt_nhc_simple`: `0.403969 / 2.823445`
+1. `mdin_npt_andersenbaro`: `0.141248 / 1.248507`
+2. `mdin_npt_berendsen`: `0.451815 / 3.684679`
+3. `mdin_npt_mcbaro`: `0.283451 / 5.499557`
+4. `mdin_nve_shake`: `0.444642 / 3.770057`
+5. `mdin_nvt_andersen`: `0.201041 / 1.403091`
+6. `mdin_nvt_langevin`: `0.150178 / 1.184134`
+7. `mdin_nvt_nhc_simple`: `0.371409 / 2.429600`
 
 基线原始数据位于仓库内：
-`reports/step1000_baseline/`
+1. `reports/step1000_seedlock_hybrid_gpu/local_cpu_relerr_summary.csv`
+2. `reports/step1000_seedlock_hybrid_gpu/run_index_gpu_local_cpu.csv`
 
 基线图（由 1000 步数据生成）：
 
@@ -150,45 +158,53 @@ python3 ./tools/plot_step_relerr.py \
 如需重新生成这些图：
 
 ```bash
-python3 ./tools/plot_step1000_baseline.py
+python3 ./tools/plot_step1000_baseline.py \
+  --baseline-dir /home/wuping/cpusponge/reports/step1000_seedlock_hybrid_gpu \
+  --fig-dir /home/wuping/cpusponge/docs/figures \
+  --step-tag step1000 \
+  --focus-case mdin_npt_andersenbaro
 ```
+
+说明：现有图主要用于展示误差形态；以本节固定 seed 汇总数值和 CSV 为准。
 
 若要按同一脚本生成 step5000 对应图：
 
 ```bash
 python3 ./tools/plot_step1000_baseline.py \
-  --baseline-dir /home/wuping/cpusponge/reports/step5000_baseline \
+  --baseline-dir /home/wuping/cpusponge/reports/step5000_seedlock_hybrid_gpu \
   --fig-dir /home/wuping/cpusponge/docs/figures \
   --step-tag step5000 \
   --focus-case mdin_npt_andersenbaro
 ```
 
-## 已完成基线结果（step=5000）
+## 已完成基线结果（step=5000, 固定 seed）
 
 比较指标列：
 `Step,Time,Temperature,Potential,LJ,PME,Nb14_LJ,Nb14_EE,Bond,Angle,Dihedral`
 
+固定 seed：`12345`
+
 汇总结果（local_cpu 相对 GPU）：
 
 1. 7/7 case 跑通，无 non-finite。
-2. 平均相对误差：`0.420779%`
-3. 最大相对误差：`6.862877%`
-4. 平均单 case 耗时：`3732.43s`（约 `62.2` 分钟）
+2. 平均相对误差：`0.416807%`
+3. 最大相对误差：`7.109131%`
+4. 平均单 case 耗时：`3223.71s`（约 `53.7` 分钟）
 
 按 case 的误差（`mean_rel_err_pct / max_rel_err_pct`）：
 
-1. `mdin_npt_andersenbaro`: `0.292444 / 3.067759`
-2. `mdin_npt_berendsen`: `0.567299 / 5.848963`
-3. `mdin_npt_mcbaro`: `0.326313 / 3.088861`
-4. `mdin_nve_shake`: `0.561873 / 5.538732`
-5. `mdin_nvt_andersen`: `0.376884 / 3.896135`
-6. `mdin_nvt_langevin`: `0.273847 / 2.549646`
-7. `mdin_nvt_nhc_simple`: `0.546796 / 6.862877`
+1. `mdin_npt_andersenbaro`: `0.295817 / 2.799325`
+2. `mdin_npt_berendsen`: `0.532669 / 7.109131`
+3. `mdin_npt_mcbaro`: `0.293063 / 2.441305`
+4. `mdin_nve_shake`: `0.562301 / 4.918853`
+5. `mdin_nvt_andersen`: `0.394903 / 2.883012`
+6. `mdin_nvt_langevin`: `0.287550 / 2.174993`
+7. `mdin_nvt_nhc_simple`: `0.551348 / 6.652882`
 
 step5000 基线原始数据位于仓库内：
 
-1. `reports/step5000_baseline/local_cpu_overview.csv`
-2. `reports/step5000_baseline/local_cpu_relerr_summary.csv`
+1. `reports/step5000_seedlock_hybrid_gpu/local_cpu_relerr_summary.csv`
+2. `reports/step5000_seedlock_hybrid_gpu/run_index_gpu_local_cpu.csv`
 
 step5000 示例图（local_cpu vs GPU）：
 
@@ -199,6 +215,8 @@ step5000 示例图（local_cpu vs GPU）：
 ![step5000 andersenbaro metrics](docs/figures/step5000_andersenbaro_metrics.png)
 
 ![step5000 andersenbaro heatmap](docs/figures/step5000_andersenbaro_heatmap_local_cpu.png)
+
+说明：现有图主要用于展示误差形态；以本节固定 seed 汇总数值和 CSV 为准。
 
 ## 附录风格压力轨迹采集与出图
 
@@ -226,43 +244,11 @@ python3 ./tools/plot_appendix_pressure.py \
 1. `reports/step5000_appendix/pressure/*.csv`
 2. `reports/step5000_appendix/figures/*.png`
 
-已完成附录采样结果（`mdin_npt_andersenbaro`, `1000` 步, `10 GPU + 1 CPU`）：
+说明：
 
-1. GPU 10 次 pressure 均值的均值：`-155.4256`
-2. CPU 参考 run 的 pressure 均值：`-165.0190`
-3. CPU 相对 GPU 均值差值：`-9.5934`
-
-附录统计数据：
-`reports/step1000_appendix/pressure/pressure_summary_stats.csv`
-
-附录图：
-
-![step1000 pressure gpu repeats](docs/figures/step1000_pressure_gpu_repeats.png)
-
-![step1000 pressure gpu gray vs cpu](docs/figures/step1000_pressure_gpu_gray_vs_cpu.png)
-
-![step1000 pressure cpu ma10](docs/figures/step1000_pressure_cpu_ma10.png)
-
-![step1000 pressure overlay](docs/figures/step1000_pressure_overlay_gpu10_cpu1.png)
-
-已完成附录采样结果（`mdin_npt_andersenbaro`, `5000` 步, `10 GPU + 1 CPU`）：
-
-1. GPU 10 次 pressure 均值的均值：`-100.4906`
-2. CPU 参考 run 的 pressure 均值：`-94.3628`
-3. CPU 相对 GPU 均值差值：`+6.1278`
-
-附录统计数据：
-`reports/step5000_appendix/pressure/pressure_summary_stats.csv`
-
-附录图：
-
-![step5000 pressure gpu repeats](docs/figures/step5000_pressure_gpu_repeats.png)
-
-![step5000 pressure gpu gray vs cpu](docs/figures/step5000_pressure_gpu_gray_vs_cpu.png)
-
-![step5000 pressure cpu ma10](docs/figures/step5000_pressure_cpu_ma10.png)
-
-![step5000 pressure overlay](docs/figures/step5000_pressure_overlay_gpu10_cpu1.png)
+1. 正式仓库默认不再附带历史附录采样结果和图片，避免携带旧数据。
+2. 运行上面的脚本后，会在 `reports/step5000_appendix/` 下生成新的统计 CSV 和 PNG。
+3. 若需要 `step=1000` 的附录采样，可将 `STEP_LIMIT` 改为 `1000` 后按同样流程执行。
 
 ## 备注
 
