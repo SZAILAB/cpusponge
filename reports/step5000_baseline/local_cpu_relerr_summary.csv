@@ -1,8 +1,0 @@
-case,mean_rel_err_pct,max_rel_err_pct
-mdin_npt_andersenbaro,0.292444,3.067759
-mdin_npt_berendsen,0.567299,5.848963
-mdin_npt_mcbaro,0.326313,3.088861
-mdin_nve_shake,0.561873,5.538732
-mdin_nvt_andersen,0.376884,3.896135
-mdin_nvt_langevin,0.273847,2.549646
-mdin_nvt_nhc_simple,0.546796,6.862877

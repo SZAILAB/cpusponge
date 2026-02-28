@@ -1,2 +1,0 @@
-backend,accuracy_mean_err_pct,accuracy_score,stability_score,speed_avg_elapsed_s,speed_score,maintainability_score,overall_score,pass_main,nonfinite_main,repeat_drift_pct,status
-local_cpu,0.277071,100.0000,99.3706,730.571429,42.2174,85.0000,93.3773,7,0,0.314688,PASS
